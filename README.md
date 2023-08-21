@@ -1,48 +1,35 @@
+### Description
+This app is created with React <b>(frontend)</b>, Laravel API <b>(backend)</b> and Docker env. You can download the Docker Desktop, clone the repository and are ready to run the application in your local computer by following the installation steps.
+### Docker Env Detail
+- PHP 7.4
+- Node.js 18.16.0
+- MYSQL 8.0.29
+- React (http://localhost:3000)
+- Laravel 8 (Breeze API) (http://localhost:8000)
 ### Requirements
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [LocalWP](https://localwp.com/) (Download from the link and install to your local for running WordPress easily)
 ### Installation
-- Download [Local Copy of Ladder](https://drive.google.com/file/d/1pjuN22ynrVQhnvQ3luhrzitwwRr_tfUg/view?usp=sharing)
-- Open LocalWP program.
-- Files > Import Site > Choose ladder.zip
-- Install
-### Settings
-Change the remote repository url with yours <b>(This is one time process on installation)</b>
-- Go to [repository](https://bitbucket.org/gocodistry/main-site/src)
-- Copy your clone repo url `(https://[your_username]@bitbucket.org/gocodistry/main-site.git)`
-- Open root path of project in terminal
+Before start be sure that another local env is not working and using PORTS 80, 3306, 3000, 8000
+- Install Docker Desktop.
+- Clone the [repository](https://github.com/kyguney/innoscripta-news-feed-app.git)
+- Open terminal, go to backend folder and do the steps
 ```
-$ git remote set-url origin https://[your_username]@bitbucket.org/gocodistry/main-site.git
+$ cd backend
+$ cp .env.example .env
 ```
-### Building Asset Files
-In terminat at root path
+- Go back to root folder via terminal and we are ready to run docker-composer (Don't worry. It can take a little time to complete)
 ```
-$ cd wp-content/themes/ladder-theme/boilerplate
-$ nvm use 
-# if you haven't got required nodejs version
-$ nvm install 15.14.0
-$ nvm use
-$ npm install
-$ npm start # for run develop server
-$ npm run build # for generate assets
+$ docker-composer up
 ```
-### Branching, Commiting and Deployment
-- Master branch is the main branch which you can merge your branches for auto deployment to production.
-- When we are creating branch we need to use following branch names:
-    - for feature: `feature/[Ticket ID]-[Ticket with lowercase and dash (-) between words]`
-    - for bugs: `bugfix/[Ticket ID]-[Ticket with lowercase and dash (-) between words]`
-- When we are committing we need to add ticket ID also in commit. For example: `[LAD-10] Modified Home Page Hero Section`
-- Please add plugins which you are going to use to `.gitignore` file under whitelist.
-- For database migration we are using WP Migrate DB Pro. It is under `Tools > Migrate DB Pro`.
-    - You need to take the safe connection url from production `(Tools > Migrate DB Pro > Settings)`
-    - Go to your local admin
-    - Tools > Migrate DB Pro
-    - New Migration > Pull for updating your local, Push for updating Production
-    - Paste the connection url
-    - Choose Media Files if you add new image or other file
-    - And proceed
-### Useful Assets
-- [LocalWP Ladder Exported File](https://drive.google.com/file/d/1pjuN22ynrVQhnvQ3luhrzitwwRr_tfUg/view?usp=sharing)
-- [Ladder WP/Database Credentials](https://drive.google.com/file/d/1IyVL2yxw8YkRZopys8W8btnsVCfdOJb6/view?usp=sharing)
-- [Repository](https://bitbucket.org/gocodistry/main-site/src/master/)
-- [Project Jira Url](https://codistry.atlassian.net/jira/software/projects/LAD/boards/90)
+### After Create Containers
+In root folder via terminal
+```
+$ docker ps
+```
+- We need to go inside the container to set up migrations and seeds (Container id will be different in your local)
+![PS_Image](https://drive.google.com/uc?export=view&id=1YPU05TCbcLYVgpvQQ7XRZ1kCKpnRcS14)
+```
+$ docker exec -it [your_container_id] sh
+# php artisan migrate:fresh --seed
+```
+This command will create test user with test@test.com email address and '123123123' password. We are retreiving News from Guardian API, New York Times API and NewsAPI with seeder. Application records the news in Docker DB Container and shows the news via React frontend. We are ready to go. After completed the installation and setting you can login to frontend app [http://localhost:3000](http://localhost:3000). Don't forget! You can personalize you news feed by updating your profile. Enjoy!
