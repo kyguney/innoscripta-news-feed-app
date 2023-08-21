@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    environment:
+      DB_HOST: db
+      DB_DATABASE: newsfeed
+      DB_USER: news_user
+      DB_PASSWORD: news123
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/news-feed/backend
+    depends_on:
+      - db
+    networks:
+      - news_feed
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/news-feed/frontend
+    depends_on:
+      - backend
+    networks:
+      - news_feed
+  db:
+    image: mysql:8.0.29
+    environment:
+      MYSQL_DATABASE: 'newsfeed'
+      MYSQL_USER: 'news_user'
+      MYSQL_PASSWORD: 'news123'
+      MYSQL_ROOT_PASSWORD: 'root'
+    networks:
+      - news_feed
+networks:
+  news_feed:
+    driver: bridge
